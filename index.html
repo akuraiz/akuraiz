@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heng Reaksa - IT Student & Developer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery.terminal/js/jquery.terminal.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery.terminal/css/jquery.terminal.min.css"/>
+    <style>
+        :root {
+            --bg-color: #121212;
+            --text-color: #f0f0f0;
+            --accent-color: #FFD700; /* Gold */
+            --sub-text-color: #b0b0b0;
+            --section-bg: #1a1a1a;
+            --icon-color: #f0f0f0;
+            --nav-bg: rgba(18, 18, 18, 0.8);
+        }
+
+        html.light {
+            --bg-color: #f0f0f0;
+            --text-color: #121212;
+            --accent-color: #DAA520; /* Darker Gold */
+            --sub-text-color: #555555;
+            --section-bg: #e5e5e5;
+            --icon-color: #121212;
+            --nav-bg: rgba(240, 240, 240, 0.8);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            transition: background-color 0.5s ease, color 0.5s ease;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: var(--nav-bg);
+            backdrop-filter: blur(5px);
+            z-index: 50;
+            padding: 15px 0;
+            transition: background-color 0.5s ease;
+        }
+
+        .navbar-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .navbar a {
+            color: var(--sub-text-color);
+            text-decoration: none;
+            font-weight: 500;
+            margin: 0 15px;
+            transition: color 0.3s ease;
+        }
+
+        .navbar a:hover {
+            color: var(--accent-color);
+        }
+
+        /* Theme Toggle Button */
+        #theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            z-index: 100;
+            color: var(--icon-color);
+            font-size: 24px;
+            transition: color 0.5s ease;
+        }
+
+        #theme-toggle:hover {
+            color: var(--accent-color);
+        }
+
+        section {
+            padding: 80px 0;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        h1, h2, h3 {
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        h1 {
+            font-size: 3em;
+            margin-bottom: 0.5em;
+            line-height: 1.2;
+        }
+
+        h2 {
+            font-size: 2.2em;
+            margin-bottom: 1em;
+            position: relative;
+        }
+
+        h2::after {
+            content: '';
+            width: 50px;
+            height: 3px;
+            background-color: var(--accent-color);
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            transition: background-color 0.5s ease;
+        }
+
+        .light h2::after {
+            background-color: var(--accent-color);
+        }
+
+        p {
+            margin-bottom: 1em;
+        }
+
+        .text-accent {
+            color: var(--accent-color);
+            transition: color 0.5s ease;
+        }
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: left;
+            padding-bottom: 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-content {
+            opacity: 0;
+            animation: fadeIn 1.5s forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5em, 5vw, 4em);
+        }
+
+        .hero p {
+            font-size: clamp(1em, 2vw, 1.2em);
+            color: var(--sub-text-color);
+            margin-top: 20px;
+        }
+
+        #about .profile-pic {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--accent-color);
+            margin-bottom: 20px;
+            transition: border-color 0.5s ease;
+        }
+
+        #terminal-container {
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--accent-color);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: border-color 0.5s ease;
+        }
+
+        .terminal-container .terminal, .terminal-container .cmd {
+            --background-color: var(--bg-color);
+            --color: var(--text-color);
+            --prompt-color: var(--accent-color);
+        }
+
+        .terminal-container .terminal-glitch::after {
+            background: var(--bg-color);
+        }
+
+        .pill-list {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .pill-list li {
+            background-color: var(--section-bg);
+            color: var(--sub-text-color);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            transition: background-color 0.3s;
+        }
+
+        .pill-list li:hover {
+            background-color: var(--accent-color);
+            color: var(--bg-color);
+            cursor: default;
+        }
+
+        .project-item {
+            background-color: var(--section-bg);
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.5s ease;
+        }
+
+        .project-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .project-item h3 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+            color: var(--accent-color);
+            transition: color 0.5s ease;
+        }
+
+        .project-item p {
+            font-size: 1em;
+            color: var(--sub-text-color);
+        }
+
+        /* Before & After Slider */
+        .before-after-container {
+            position: relative;
+            width: 100%;
+            padding-top: 56.25%; /* 16:9 Aspect Ratio */
+            max-width: 800px;
+            margin: 0 auto 40px;
+            cursor: ew-resize;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            touch-action: pan-y;
+        }
+
+        .before-after-container img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            -webkit-user-drag: none;
+            user-select: none;
+        }
+
+        .before-image {
+            z-index: 2;
+        }
+
+        .after-image {
+            clip-path: inset(0 0 0 50%);
+            z-index: 3;
+        }
+
+        .divider {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 4px;
+            height: 100%;
+            background-color: var(--accent-color);
+            z-index: 4;
+            transform: translateX(-50%);
+        }
+
+        .divider::before, .divider::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--accent-color);
+            z-index: 5;
+            transition: all 0.3s ease;
+        }
+
+        .divider::after {
+            width: 20px;
+            height: 20px;
+            background-color: var(--bg-color);
+            z-index: 6;
+        }
+
+        .before-after-container:hover .divider::before {
+            transform: translate(-50%, -50%) scale(1.2);
+        }
+
+        .vision-goals ul, .personal-passion ul, .contact-links ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .vision-goals li, .personal-passion li, .contact-links li {
+            margin-bottom: 10px;
+            padding-left: 25px;
+            position: relative;
+            color: var(--sub-text-color);
+        }
+
+        .vision-goals li::before, .personal-passion li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            font-size: 1.2em;
+            line-height: 1;
+            color: var(--accent-color);
+            transition: color 0.5s ease;
+        }
+
+        .gaming-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .gaming-item {
+            background-color: var(--section-bg);
+            padding: 20px;
+            border-radius: 8px;
+            transition: transform 0.3s ease, background-color 0.5s ease;
+        }
+
+        .gaming-item:hover {
+            transform: scale(1.03);
+        }
+
+        .gaming-item h3 {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+
+        .contact-links ul {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .contact-links a {
+            color: var(--text-color);
+            font-size: 40px;
+            transition: color 0.3s ease, transform 0.3s ease;
+            display: inline-block;
+        }
+
+        .contact-links a:hover {
+            color: var(--accent-color);
+            transform: scale(1.1);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            border-top: 1px solid var(--section-bg);
+            color: var(--sub-text-color);
+            font-size: 0.9em;
+            transition: border-top 0.5s ease;
+        }
+
+        .footer a {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        /* --- MEDIA QUERIES FOR RESPONSIVENESS --- */
+
+        /* Mobile and Tablet Layout */
+        @media (max-width: 768px) {
+            .navbar a {
+                margin: 0 8px;
+            }
+
+            section {
+                padding: 60px 0;
+            }
+
+            h1 {
+                font-size: 2.5em;
+            }
+
+            h2 {
+                font-size: 2em;
+                text-align: center;
+            }
+
+            h2::after {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+        }
+
+        /* Mobile-Specific Layout */
+        @media (max-width: 480px) {
+            .hero-content {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="#home">Home</a>
+            <a href="#about">About</a>
+            <a href="#projects">Projects</a>
+            <a href="#skills">Skills</a>
+            <a href="#contact">Contact</a>
+        </div>
+    </nav>
+
+    <button id="theme-toggle" aria-label="Toggle light and dark mode">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-moon">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+    </button>
+
+    <main class="container">
+        <section class="hero visible" id="home" data-title="Heng Reaksa - Home">
+            <div class="hero-content">
+                <h1>Hi, I’m <span class="text-accent">Reaksa</span>.</h1>
+                <p>I’m a 20-year-old IT student on a mission to turn curiosity into skill. From building PCs to coding full-stack web applications, I explore, learn, and share my knowledge with clarity and passion.</p>
+            </div>
+        </section>
+
+        <section id="about" data-title="Heng Reaksa - About">
+            <h2 class="section-title">About Me</h2>
+            <img src="me.jpg" alt="A profile photo of Heng Reaksa" class="profile-pic">
+            <p>I am a curious, disciplined, and analytical individual with a deep passion for technology and problem-solving. As a student entering my 4th year at the National Technical Training Institute (NTTI) in Cambodia, I am focused on hands-on learning.</p>
+            <p>Every project—whether it’s a web app or a PC build—is an opportunity to understand deeply and share knowledge clearly.</p>
+        </section>
+
+        <section id="now" data-title="Heng Reaksa - Now">
+            <h2 class="section-title">What I'm doing now</h2>
+            <p>I believe in continuous learning. Use the terminal below to see what I'm currently focused on.</p>
+            <div id="terminal-container"></div>
+        </section>
+
+        <section id="projects" data-title="Heng Reaksa - Projects">
+            <h2 class="section-title">Projects</h2>
+
+            <div class="project-item">
+                <h3>Full-Stack Laravel Ecommerce Website and System</h3>
+                <p>Developed a complete Ecommerce and System with features like convenience browsing, paying, goods tracking and even customer management, inventory management and reporting. This project taught me about **real-world software architecture** and complex problem-solving. Use the slider below to see the user-facing store page and the secure, functional admin dashboard.</p>
+                <div class="before-after-container">
+                    <img class="before-image" src="user.png" alt="Before image of the POS Store's Page">
+                    <img class="after-image" src="admin.png" alt="After image of the POS Dashboard Page">
+                    <div class="divider"></div>
+                </div>
+            </div>
+
+            <div class="project-item">
+                <h3>PC Build & Optimization Journey</h3>
+                <p>Documented my hands-on experience researching, budgeting, and assembling a high-performance PC for 1440p gaming. This project highlights my practical knowledge of hardware and system optimization.</p>
+            </div>
+
+            <div class="project-item">
+                <h3>Portfolio Website & Educational Projects</h3>
+                <p>Built and deployed interactive web pages using animations and hover effects, focusing on clean UI/UX design. This serves as a platform to showcase my skills and document my learning journey.</p>
+            </div>
+        </section>
+
+        <section id="skills" data-title="Heng Reaksa - Skills">
+            <h2 class="section-title">Technical Skills</h2>
+            <p>A breakdown of my technical toolkit and areas of expertise.</p>
+
+            <h3>Programming & Development</h3>
+            <ul class="pill-list">
+                <li>HTML & CSS</li>
+                <li>PHP & MySQL</li>
+                <li>Laravel</li>
+                <li>Tailwind CSS</li>
+                <li>Bootstrap</li>
+                <li>JavaScript</li>
+            </ul>
+
+            <h3>Hardware & Systems Expertise</h3>
+            <p>My passion for building high-performance systems is rooted in a data-driven approach. I specialize in selecting components with a focus on maximizing performance-per-dollar, optimizing thermal efficiency, and ensuring a stable, reliable user experience. This hands-on expertise complements my software development skills by providing a holistic understanding of technology from the ground up.</p>
+            <ul class="pill-list">
+                <li>System Architecture & Optimization</li>
+                <li>Performance-to-Cost Analysis (FPS/Dollar)</li>
+                <li>Thermal & Power Management</li>
+                <li>Hardware Troubleshooting & Tuning</li>
+                <li>Cable Management & Aesthetics</li>
+            </ul>
+        </section>
+
+        <section id="goals" data-title="Heng Reaksa - Goals">
+            <h2 class="section-title">Vision & Goals</h2>
+            <ul class="vision-goals">
+                <li><span class="text-accent">Short-Term:</span> Master full-stack web development and UX/UI skills.</li>
+                <li><span class="text-accent">Medium-Term:</span> Deliver projects that solve real-world problems and gain professional recognition.</li>
+                <li><span class="text-accent">Long-Term:</span> Become a skilled IT professional with a strong foundation in technology, web, and hardware.</li>
+            </ul>
+        </section>
+
+        <section id="gaming" data-title="Heng Reaksa - Gaming">
+            <h2 class="section-title">Gaming & Personal Passion</h2>
+            <div class="gaming-grid">
+                <div class="gaming-item">
+                    <h3>Games Played</h3>
+                    <ul>
+                        <li><span class="text-accent">Marvel Rivals</span></li>
+                        <li><span class="text-accent">Sea of Thieves</span></li>
+			<li><span class="text-accent">Hogwarts Legacy</span></li>
+                        <li>...and more!</li>
+                    </ul>
+                </div>
+                <div class="gaming-item">
+                    <h3>Tech & Gear</h3>
+                    <ul>
+                        <li><span class="text-accent">Keyboard:</span> Aula F75</li>
+                        <li><span class="text-accent">Mouse:</span> IPI Float 88</li>
+                        <li><span class="text-accent">Mousepad:</span> X-raypad aqua control+</li>
+                        <li>Building and optimizing PC hardware</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" data-title="Heng Reaksa - Connect" class="contact-links">
+            <h2 class="section-title">Let's Connect</h2>
+            <ul>
+                <li><a href="https://github.com/akuraiz" aria-label="Github Profile"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-github"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg></a></li>
+                <li><a href="https://web.facebook.com/saa.752990" aria-label="Facebook Profile"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-facebook"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg></a></li>
+                <li><a href="https://www.instagram.com/reaksaz_1/" aria-label="Instagram Profile"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-instagram"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg></a></li>
+                <li><a href="#" aria-label="Telegram"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-telegram"><path d="M21.996 4.025l-2.614 17.069c-.198 1.298-.946 1.638-2.062 1.055l-4.14-3.058-2.001 1.936c-.22.213-.497.46-.995.46-1.127 0-1.875-.726-2.072-1.921l-3.238-11.411c-.347-1.137.525-1.554 1.341-1.293l18.528 7.159c1.082.417 1.082 1.042-.001 1.459l-10.42 4.088-3.045-2.946c-.22-.213-.497-.46-.995-.46-1.127 0-1.875.726-2.072 1.921l-.002.007c-2.338 7.915-1.983 1.996.002 1.996h.001z"></path></svg></a></li>
+            </ul>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2025 Heng Reaksa. All Rights Reserved. Built with <span class="text-accent">&lt;/&gt;</span> and passion.</p>
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const sections = document.querySelectorAll('section');
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.2 // Trigger when 20% of the section is visible
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        document.title = entry.target.dataset.title;
+                    }
+                });
+            }, observerOptions);
+
+            sections.forEach(section => {
+                if (section.id !== 'home') {
+                    observer.observe(section);
+                }
+            });
+
+            // Theme Toggle Logic
+            const themeToggleBtn = document.getElementById('theme-toggle');
+            const html = document.documentElement;
+
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                html.classList.add(savedTheme);
+            } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+                html.classList.add('light');
+            }
+
+            updateIcon();
+
+            themeToggleBtn.addEventListener('click', () => {
+                html.classList.toggle('light');
+                const newTheme = html.classList.contains('light') ? 'light' : 'dark';
+                localStorage.setItem('theme', newTheme);
+                updateIcon();
+            });
+
+            function updateIcon() {
+                const isLightMode = html.classList.contains('light');
+                themeToggleBtn.innerHTML = isLightMode
+                    ? `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-sun">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>`
+                    : `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-moon">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>`;
+            }
+
+            // Terminal Logic
+            $('#terminal-container').terminal(function(command, term) {
+                if (command !== '') {
+                    try {
+                        let result;
+                        switch(command.toLowerCase()) {
+                            case 'help':
+                                term.echo('Available commands:\n- [[;var(--accent-color);]help]: show this help message\n- [[;var(--accent-color);]whoami]: get to know me a little better\n- [[;var(--accent-color);]ls]: list current focuses');
+                                break;
+                            case 'whoami':
+                                term.echo("I am Heng Reaksa, a curious IT student from Phnom Penh, Cambodia. I'm a hands-on learner passionate about solving problems and building things, whether it's software or hardware.");
+                                break;
+                            case 'ls':
+                                term.echo("[[;var(--accent-color);]Current Focuses:]\n- Mastering full-stack web development (UX/UI design)\n- Automating daily tasks with scripts\n- Researching next-gen GPUs");
+                                break;
+                            default:
+                                result = `Command not found: ${command}. Type 'help' for a list of commands.`;
+                                term.echo(result);
+                                break;
+                        }
+                    } catch(e) {
+                        term.error(e);
+                    }
+                } else {
+                    term.echo('');
+                }
+            }, {
+                greetings: "[[;var(--accent-color);]Interactive Console v1.0]\nType 'help' to get started.",
+                name: 'reaksa_console',
+                height: 200,
+                width: '100%',
+                prompt: 'visitor@reaksa.dev:~$ ',
+                css_class: 'terminal-container'
+            });
+
+            // Before & After Slider Logic
+            const sliderContainer = document.querySelector('.before-after-container');
+            const beforeImage = document.querySelector('.before-image');
+            const afterImage = document.querySelector('.after-image');
+            const divider = document.querySelector('.divider');
+
+            let isDragging = false;
+
+            sliderContainer.addEventListener('mousedown', startDrag);
+            sliderContainer.addEventListener('mouseup', endDrag);
+            sliderContainer.addEventListener('mouseleave', endDrag);
+            sliderContainer.addEventListener('mousemove', drag);
+
+            // Mobile support
+            sliderContainer.addEventListener('touchstart', startDrag);
+            sliderContainer.addEventListener('touchend', endDrag);
+            sliderContainer.addEventListener('touchmove', drag);
+
+            function startDrag(e) {
+                isDragging = true;
+            }
+
+            function endDrag(e) {
+                isDragging = false;
+            }
+
+            function drag(e) {
+                if (!isDragging) return;
+
+                const rect = sliderContainer.getBoundingClientRect();
+                let x = (e.clientX || e.touches[0].clientX) - rect.left;
+
+                x = Math.max(0, Math.min(x, rect.width));
+
+                const percentage = (x / rect.width) * 100;
+
+                afterImage.style.clipPath = `inset(0 0 0 ${percentage}%)`;
+                divider.style.left = `${percentage}%`;
+            }
+        });
+    </script>
+</body>
+</html>
